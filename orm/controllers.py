@@ -1,9 +1,10 @@
 from typing import List, Dict, Union, Optional
 
 from sqlalchemy import select
+from telebot.types import Message
 
 from orm.database import db_session
-from orm.models import Region, Variant, Payload, SubVariant
+from orm.models import Region, Variant, Payload, SubVariant, User
 from orm.utils import serializer
 
 
@@ -35,3 +36,12 @@ def get_variant_payload(
         .filter(Region.name == region_name, Variant.name == variant_name, SubVariant.name == sub_variant_name)
     query_result = db_session.execute(query).scalars().all()
     return serializer(query_result, exclude=['variant_id', 'region_id', 'sub_variant_id'])
+
+
+def init_user(message: Message):
+    user = User.get(db_session, user_id=message.from_user.id)
+
+    if user:
+        User.update(db_session, entity_id=user.id, region=None, variant=None, sub_variant=None)
+    else:
+        User.create(db_session, user_id=message.from_user.id)

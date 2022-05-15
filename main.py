@@ -2,7 +2,7 @@ import telebot
 from telebot.types import Message
 
 from keyboard import medic_but, regions_markup, variants_markup, variants, regions
-from orm.controllers import get_sub_variants
+from orm.controllers import get_sub_variants, init_user
 from utils import ensure_message_valid, build_keyboard
 
 TOKEN = "5343039631:AAE7AXTAvO2dVr5gFNwgAwp1yB0SKGAYFNY"
@@ -10,13 +10,14 @@ bot = telebot.TeleBot(TOKEN)
 cat = "⬇️Оберіть Категорію⬇️ :"
 
 
-@bot.message_handler(commands="start")
+@bot.message_handler(commands=["start"])
 def start(message: Message):
     bot.send_message(
         message.chat.id,
         "Доброго дня,{0.first_name}👋\n🔍Оберіть Громаду 🏡 :".format(message.from_user),
         reply_markup=regions_markup
     )
+    init_user(message)
 
 
 @bot.message_handler(content_types=["text"], chat_types=['private'])
