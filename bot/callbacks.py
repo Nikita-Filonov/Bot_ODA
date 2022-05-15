@@ -13,6 +13,8 @@ from settings import BACK_ACTION, SUB_VARIANT_REPLY
 
 def variants_callback(message: Message, bot: TeleBot, start_handler: Callable):
     """Функция коллбэк для обработки вариантов"""
+    logging.warning(f'Handling variants for user {message.from_user.id}')
+
     if not is_message_valid(message, mapping=variants):
         start_handler(message, bot=bot)
         return
@@ -47,7 +49,7 @@ def payload_callback(message: Message, bot: TeleBot, start_handler: Callable):
 
 def sub_variants_callback(message: Message, sub_variants: List[SubVariant], bot: TeleBot, start_handler: Callable):
     """Функция коллбэк для обработки подвариантов"""
-    logging.warning(f'handling sub variants for user {message.from_user.id}')
+    logging.warning(f'Handling sub variants for user {message.from_user.id}')
 
     save_user_answer(message, sub_variant=message.text)
     if not is_message_valid(message, mapping=sub_variants):
