@@ -63,7 +63,8 @@ class BaseModel(Base):
         session.commit()
 
     @classmethod
-    def update(cls, session: Session, entity_id, **kwargs) -> None:
-        query = update(cls).filter_by(id=entity_id).values(**kwargs)
+    def update(cls, session: Session, entity_id, entity_key='id', **kwargs) -> None:
+        where = {entity_key: entity_id}
+        query = update(cls).filter_by(**where).values(**kwargs)
         session.execute(query)
         session.commit()
