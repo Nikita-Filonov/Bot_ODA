@@ -11,7 +11,7 @@ from orm.models import SubVariant
 from settings import BACK_ACTION, SUB_VARIANT_REPLY
 
 
-def variants_callback(message: Message, bot: TeleBot, start_handler: Callable):
+def variants_callback(message: Message, bot: TeleBot, start_handler: Callable, text_handler: Callable):
     """Функция коллбэк для обработки вариантов"""
     logging.warning(f'Handling variants for user {message.from_user.id}')
 
@@ -32,7 +32,13 @@ def variants_callback(message: Message, bot: TeleBot, start_handler: Callable):
 
         bot.send_message(message.from_user.id, text=SUB_VARIANT_REPLY, reply_markup=sub_variants_markup)
         bot.register_next_step_handler(
-            message, sub_variants_callback, sub_variants=sub_variants, bot=bot, start_handler=start_handler)
+            message,
+            sub_variants_callback,
+            sub_variants=sub_variants,
+            bot=bot,
+            start_handler=start_handler,
+            text_handler=text_handler
+        )
         return
 
     payload_callback(message, bot=bot, start_handler=start_handler)
@@ -47,13 +53,23 @@ def payload_callback(message: Message, bot: TeleBot, start_handler: Callable):
     start_handler(message, bot=bot)
 
 
-def sub_variants_callback(message: Message, sub_variants: List[SubVariant], bot: TeleBot, start_handler: Callable):
+def sub_variants_callback(
+        message: Message,
+        sub_variants: List[SubVariant],
+        bot: TeleBot,
+        start_handler: Callable,
+        text_handler: Callable
+):
     """Функция коллбэк для обработки подвариантов"""
     logging.warning(f'Handling sub variants for user {message.from_user.id}')
 
     save_user_answer(message, sub_variant=message.text)
     if not is_message_valid(message, mapping=sub_variants):
         start_handler(message, bot=bot)
+        return
+
+    if message.text == BACK_ACTION:
+        text_handler(message, bot=bot)
         return
 
     payload_callback(message, bot=bot, start_handler=start_handler)
