@@ -11,7 +11,7 @@ from orm.models import SubVariant
 from settings import BACK_ACTION, SUB_VARIANT_REPLY
 
 
-def variants_callback(message: Message, bot: TeleBot, start_handler: Callable, text_handler: Callable):
+def variants_callback(message: Message, bot: TeleBot, start_handler: Callable, text_handler: Callable) -> None:
     """Функция коллбэк для обработки вариантов"""
     logging.warning(f'Handling variants for user {message.from_user.id}')
 
@@ -44,7 +44,7 @@ def variants_callback(message: Message, bot: TeleBot, start_handler: Callable, t
     payload_callback(message, bot=bot, start_handler=start_handler)
 
 
-def payload_callback(message: Message, bot: TeleBot, start_handler: Callable):
+def payload_callback(message: Message, bot: TeleBot, start_handler: Callable) -> None:
     """Функция коллбэк для обработки адресов, телефонов и прочей информации"""
     logging.warning(f'Sending payload to user {message.from_user.id}')
     payload = get_user_payload(message)
@@ -59,7 +59,7 @@ def sub_variants_callback(
         bot: TeleBot,
         start_handler: Callable,
         text_handler: Callable
-):
+) -> None:
     """Функция коллбэк для обработки подвариантов"""
     logging.warning(f'Handling sub variants for user {message.from_user.id}')
 
