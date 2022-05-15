@@ -1,19 +1,22 @@
-from typing import List, Dict
+from typing import List, Union
 
 from telebot.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
-from orm.models import Payload
+from orm.models import Payload, Variant, SubVariant, Region
 
 
-def is_message_valid(message: Message, mapping: List[Dict[str, str]], key='name') -> bool:
-    return any(message.text == item[key] for item in mapping)
+def is_message_valid(message: Message, mapping: List[Union[Variant, SubVariant, Region]]) -> bool:
+    return any(message.text == item.name for item in mapping)
 
 
-def build_keyboard(mapping: List[Dict[str, str]], key='name') -> ReplyKeyboardMarkup:
-    return ReplyKeyboardMarkup(resize_keyboard=True).add(*[KeyboardButton(item[key]) for item in mapping])
+def build_keyboard(mapping: List[Union[Variant, SubVariant, Region]], **kwargs) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True, **kwargs).add(*[KeyboardButton(item.name) for item in mapping])
 
 
 def serialize_contact_information(payloads: List[Payload]) -> str:
+    if not payloads:
+        return '<strong>Мы не смогли ничего найти</strong>'
+
     information = ''.join([
         f"""
         <em>Телефон</em>: {payload.phone}

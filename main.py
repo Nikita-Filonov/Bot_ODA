@@ -57,8 +57,8 @@ def handle_variants(message: Message):
 
 
 def handle_payload(message: Message):
-    payload = get_user_payload(message)
     logging.warning(f'Sending payload to user {message.from_user.id}')
+    payload = get_user_payload(message)
 
     bot.send_message(message.from_user.id, text=serialize_contact_information(payload), parse_mode='html')
     start(message)
