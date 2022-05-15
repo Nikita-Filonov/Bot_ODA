@@ -30,6 +30,11 @@ def get_variant_payload(region_name: str, variant_name: str, sub_variant_name: O
 
 
 def init_user(message: Message) -> None:
+    """
+    Используется для инициализации юзера. По сути будет получать пользователя
+    из базы данных, если пользователь есть в базе данных, то сбросит все его ответы
+    на null. Если пользователя не было в базе данных, то создаст такого пользователя.
+    """
     user = User.get(db_session, user_id=message.from_user.id)
 
     if user:
@@ -39,10 +44,16 @@ def init_user(message: Message) -> None:
 
 
 def save_user_answer(message: Message, **kwargs) -> None:
+    """Используется, чтобы сохранять ответ пользователя"""
     User.update(db_session, entity_id=message.from_user.id, entity_key='user_id', **kwargs)
 
 
 def get_user_payload(message: Message) -> List[Payload]:
+    """
+    Получает пользователя из базы данных. На основе ответов
+    пользователя делает выборку из базы данных для ``Payload``.
+    Возвращает список объектов ``Payload``
+    """
     user = User.get(db_session, user_id=message.from_user.id)
     return get_variant_payload(
         region_name=user.region,

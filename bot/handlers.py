@@ -5,12 +5,13 @@ from telebot.types import Message
 
 from bot.callbacks import variants_callback
 from bot.keyboard import regions_markup, variants_markup, regions
+from bot.utils import is_message_valid
 from orm.controllers import init_user, save_user_answer
 from settings import VARIANT_REPLY
-from bot.utils import is_message_valid
 
 
 def start_handler(message: Message, bot: TeleBot):
+    """Хендлер для команды /start"""
     logging.warning(f'Start command received from {message.from_user.id}')
 
     bot.send_message(
@@ -22,6 +23,7 @@ def start_handler(message: Message, bot: TeleBot):
 
 
 def text_handler(message: Message, bot: TeleBot):
+    """Хендлер для текстовых сообщений"""
     logging.warning(f'Handling text content type from user {message.from_user.id}')
 
     if is_message_valid(message, mapping=regions):

@@ -5,13 +5,14 @@ from telebot import TeleBot
 from telebot.types import Message
 
 from bot.keyboard import variants
+from bot.utils import is_message_valid, build_keyboard, serialize_contact_information
 from orm.controllers import get_sub_variants, save_user_answer, get_user_payload
 from orm.models import SubVariant
 from settings import BACK_ACTION, SUB_VARIANT_REPLY
-from bot.utils import is_message_valid, build_keyboard, serialize_contact_information
 
 
 def variants_callback(message: Message, bot: TeleBot, start_handler: Callable):
+    """Функция коллбэк для обработки вариантов"""
     if not is_message_valid(message, mapping=variants):
         start_handler(message, bot=bot)
         return
@@ -36,6 +37,7 @@ def variants_callback(message: Message, bot: TeleBot, start_handler: Callable):
 
 
 def payload_callback(message: Message, bot: TeleBot, start_handler: Callable):
+    """Функция коллбэк для обработки адресов, телефонов и прочей информации"""
     logging.warning(f'Sending payload to user {message.from_user.id}')
     payload = get_user_payload(message)
 
@@ -44,6 +46,7 @@ def payload_callback(message: Message, bot: TeleBot, start_handler: Callable):
 
 
 def sub_variants_callback(message: Message, sub_variants: List[SubVariant], bot: TeleBot, start_handler: Callable):
+    """Функция коллбэк для обработки подвариантов"""
     logging.warning(f'handling sub variants for user {message.from_user.id}')
 
     save_user_answer(message, sub_variant=message.text)
