@@ -10,7 +10,7 @@ from orm.controllers import init_user, save_user_answer
 from settings import VARIANT_REPLY
 
 
-def start_handler(message: Message, bot: TeleBot):
+def start_handler(message: Message, bot: TeleBot) -> None:
     """Хендлер для команды /start"""
     logging.warning(f'Start command received from {message.from_user.id}')
 
@@ -22,7 +22,7 @@ def start_handler(message: Message, bot: TeleBot):
     init_user(message)
 
 
-def text_handler(message: Message, bot: TeleBot):
+def text_handler(message: Message, bot: TeleBot) -> None:
     """Хендлер для текстовых сообщений"""
     logging.warning(f'Handling text content type from user {message.from_user.id}')
 
