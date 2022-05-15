@@ -1,5 +1,5 @@
 from orm.controllers import get_regions, get_variants
-from utils import build_keyboard
+from bot.utils import build_keyboard
 
 variants = get_variants()
 regions = get_regions()
