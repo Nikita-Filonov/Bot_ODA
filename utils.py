@@ -5,7 +5,7 @@ from telebot.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from orm.models import Payload
 
 
-def ensure_message_valid(message: Message, mapping: List[Dict[str, str]], key='name') -> bool:
+def is_message_valid(message: Message, mapping: List[Dict[str, str]], key='name') -> bool:
     return any(message.text == item[key] for item in mapping)
 
 
